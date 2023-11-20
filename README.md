@@ -147,7 +147,7 @@ Create a new function: `workshop:player/shoot` then call it from `workshop:playe
 Then, in our new function:
 
 - Remove a `Self` tag from all players and add it back to our player.
-- Set `%rangeRemaining`'s `function` scoreboard to 50000 (50 blocks **x** 1000, for precision). Here, `%rangeRemaining` is a fake players: it cannot exist because of `%`.
+- Set `%rangeRemaining`'s `function` scoreboard to `50000` (50 blocks **x** 1000, for precision). Here, `%rangeRemaining` is a fake players: it cannot exist because of `%`.
 
 Create a new function: `workshop:raycast/new` then call it from `workshop:player/shoot`
 
@@ -158,9 +158,9 @@ Create a new function: `workshop:raycast/segment` then call it from `workshop:ra
 Now, inside `workshop:raycast/segment`:
 
 - Remove 200 from `%rangeRemaining`'s `function` scoreboard (0.2 blocks **x** 1000)
-- If `%rangeRemaining`'s `function` is **not** greater or equal to 0, exit the function
+- If `%rangeRemaining`'s `function` is **not** greater or equal to `0`, exit the function
 - Plays a particle of your choice, with no speed (in the follow screenshot, I used `wax_off`)
-- Call `workshop:raycast/segment` (itself) but positioned 0.2 blocks further
+- Call `workshop:raycast/segment` (itself) but positioned `0.2` blocks further
 
 You should now have raycast everytime you press your right click.
 
@@ -193,3 +193,21 @@ What if we hit someone? Death! YEAY!
 Create a new function: `workshop:player/death` then call it from `workshop:player/shoot` on the players with the `Hit` tag.
 
 Inside, you can just add the `kill` command.
+
+If everything is good, our players should respawn instantly after getting hit.
+
+### Cooldown (even more sad)
+
+That's maybe a little bit too much right now, so we'll fix that :\(
+
+We'll start by making new scoreboards:
+
+```
+scoreboard objectives add shootCooldown dummy
+```
+
+Go inside `workshop/tick` and remove 1 of `shootCooldown` to every player.
+
+Then, inside of `workshop:player/action/use_item`, make that you call `workshop:player/shoot` only if `shootCooldown` is **not** greater than `0`.
+
+Finally, in `workshop/player/shoot`, set the value of `shootCooldown` to `20` (20t = 1s)
